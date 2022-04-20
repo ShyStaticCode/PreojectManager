@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ahau.pms.workbench.dao.CustomerDao">
+    <select id="getCustomerByName" resultType="customer">
+        select * from tbl_customer where name=#{company}
+    </select>
+
+    <insert id="save">
+    insert into tbl_customer(
+        id,
+        owner,
+        name,
+        website,
+        phone,
+        createBy,
+        createTime,
+        contactSummary,
+        nextContactTime,
+        description,
+        address
+            ) values (
+        #{id},
+        #{owner},
+        #{name},
+        #{website},
+        #{phone},
+        #{createBy},
+        #{createTime},
+        #{contactSummary},
+        #{nextContactTime},
+        #{description},
+        #{address})
+       </insert>
+
+    <select id="getTotalByCondition" resultType="int">
+        select count(*) from tbl_customer c join tbl_user u on c.owner = u.id
+        <where>
+            <if test="name != null and name != ''">
+                and c.name like '%' #{name} '%'
+            </if>
+            <if test="owner != null and owner != ''">
+                and u.name like '%' #{owner} '%'
+            </if>
+            <if test="phone != null and phone != ''">
+                and c.phone like '%' #{phone} '%'
+            </if>
+        </where>
+    </select>
+
+    <select id="getCustomerListByCondition" resultType="customer">
+        select c.id,c.name,c.phone,c.website,u.name as owner
+        from tbl_customer c join tbl_user u on c.owner = u.id
+        <where>
+            <if test="name != null and name != ''">
+                and c.name like '%' #{name} '%'
+            </if>
+            <if test="owner != null and owner != ''">
+                and u.name like '%' #{owner} '%'
+            </if>
+            <if test="phone != null and phone != ''">
+                and c.phone like '%' #{phone} '%'
+            </if>
+        </where>
+        order by c.createTime desc
+        limit #{skipCount},#{pageSize}
+    </select>
+
+    <select id="detail" resultType="customer">
+        select
+        c.id,c.name,u.name as owner,c.phone,c.website,c.createBy,c.createTime,
+        c.editBy,c.editTime,c.description,c.contactSummary,c.nextContactTime,c.address
+        from tbl_customer c
+        join tbl_user u
+        on c.owner = u.id
+        where c.id=#{id}
+    </select>
+
+    <select id="getCustomerById" resultType="customer">
+        select * from tbl_customer where id=#{id}
+    </select>
+
+    <update id="renewCustomer">
+         update tbl_customer set
+            name=#{name},
+            owner=#{owner},
+            phone=#{phone},
+            website=#{website},
+            editBy=#{editBy},
+            editTime=#{editTime},
+            description=#{description},
+            contactSummary=#{contactSummary},
+            nextContactTime=#{nextContactTime},
+            address=#{address}
+        where id=#{id}
+    </update>
+
+    <delete id="deleteCustomer">
+        delete from tbl_customer
+        where id in
+        <foreach collection="array" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="getCustomerList" resultType="customer">
+        select * from tbl_customer
+    </select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

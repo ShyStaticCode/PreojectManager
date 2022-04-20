@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://java.sun.com/xml/ns/javaee"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         id="WebApp_ID" version="2.5">
+  <display-name>pms</display-name>
+
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+  </welcome-file-list>
+
+  <!--
+    id的属性名，约定：
+    add/create：跳转到添加页，或者打开添加操作的相关窗口
+    save：执行添加的操作
+    update：执行修改操作
+    get:执行查询的操作，  或者find/select/
+    特殊操作：login
+  -->
+
+  <!--过滤器(过滤字符)-->
+  <filter>
+    <filter-name>EncodingFilter</filter-name>
+    <filter-class>com.ahau.pms.web.filter.EncodingFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>EncodingFilter</filter-name>
+    <url-pattern>*.do</url-pattern>
+  </filter-mapping>
+
+  <!--拦截器，防止恶意登陆-->
+  <filter>
+    <filter-name>LoginFilter</filter-name>
+    <filter-class>com.ahau.pms.web.filter.LoginFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>LoginFilter</filter-name>
+    <url-pattern>*.do</url-pattern>
+    <url-pattern>*.jsp</url-pattern>
+  </filter-mapping>
+
+  <!--监听器-->
+  <listener>
+    <listener-class>com.ahau.pms.web.listener.SysInitListener</listener-class>
+  </listener>
+  <!--用户控制器-->
+  <servlet>
+    <servlet-name>UserController</servlet-name>
+    <servlet-class>com.ahau.pms.settings.web.controller.UserController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>UserController</servlet-name>
+    <url-pattern>/settings/user/login.do</url-pattern>
+    <url-pattern>/settings/user/updatePassword.do</url-pattern>
+    <url-pattern>/settings/user/register.do</url-pattern>
+    <url-pattern>/setting/user/getUserList.do</url-pattern>
+    <url-pattern>/setting/user/deleteList.do</url-pattern>
+    <url-pattern>/setting/user/getUser.do</url-pattern>
+    <url-pattern>/setting/user/update.do</url-pattern>
+  </servlet-mapping>
+  <!--项目管理控制器-->
+  <servlet>
+    <servlet-name>ProjectController</servlet-name>
+    <servlet-class>com.ahau.pms.workbench.web.controller.ProjectController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ProjectController</servlet-name>
+    <url-pattern>/workbench/project/getUserList.do</url-pattern>
+    <url-pattern>/workbench/project/save.do</url-pattern>
+    <url-pattern>/workbench/project/pageList.do</url-pattern>
+    <url-pattern>/workbench/project/getUserProject.do</url-pattern>
+    <url-pattern>/workbench/project/update.do</url-pattern>
+    <url-pattern>/workbench/project/deleteList.do</url-pattern>
+    <url-pattern>/workbench/project/detail.do</url-pattern>
+    <url-pattern>/workbench/project/getRemarkListById.do</url-pattern>
+    <url-pattern>/workbench/project/saveRemark.do</url-pattern>
+    <url-pattern>/workbench/project/updateRemark.do</url-pattern>
+    <url-pattern>/workbench/project/deleteRemark.do</url-pattern>
+  </servlet-mapping>
+
+  <!--线索控制器-->
+  <servlet>
+    <servlet-name>ClueController</servlet-name>
+    <servlet-class>com.ahau.pms.workbench.web.controller.ClueController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ClueController</servlet-name>
+    <url-pattern>/workbench/clue/getUserList.do</url-pattern>
+    <url-pattern>/workbench/clue/save.do</url-pattern>
+    <url-pattern>/workbench/clue/pageList.do</url-pattern>
+    <url-pattern>/workbench/clue/detail.do</url-pattern>
+    <url-pattern>/workbench/clue/getUserClue.do</url-pattern>
+    <url-pattern>/workbench/clue/renew.do</url-pattern>
+    <url-pattern>/workbench/clue/deleteList.do</url-pattern>
+    <url-pattern>/workbench/clue/getClueRemarkListById.do</url-pattern>
+    <url-pattern>/workbench/clue/saveRemark.do</url-pattern>
+    <url-pattern>/workbench/clue/deleteRemark.do</url-pattern>
+    <url-pattern>/workbench/clue/updateRemark.do</url-pattern>
+    <url-pattern>/workbench/clue/getProjectListByClueId.do</url-pattern>
+    <url-pattern>/workbench/clue/getProjectListAndNotByClueId.do</url-pattern>
+    <url-pattern>/workbench/clue/bund.do</url-pattern>
+    <url-pattern>/workbench/clue/unbund.do</url-pattern>
+    <url-pattern>/workbench/clue/getProjectListByName.do</url-pattern>
+    <url-pattern>/workbench/clue/convert.do</url-pattern>
+  </servlet-mapping>
+
+  <!--交易控制器-->
+  <servlet>
+    <servlet-name>TranController</servlet-name>
+    <servlet-class>com.ahau.pms.workbench.web.controller.TranController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>TranController</servlet-name>
+    <url-pattern>/workbench/tran/pageList.do</url-pattern>
+    <url-pattern>/workbench/tran/detail.do</url-pattern>
+    <url-pattern>/workbench/tran/getTransactionHistoryListById.do</url-pattern>
+    <url-pattern>/workbench/tran/getUserContactsCustomerProject.do</url-pattern>
+    <url-pattern>/workbench/tran/save.do</url-pattern>
+    <url-pattern>/workbench/tran/edit.do</url-pattern>
+    <url-pattern>/workbench/tran/renew.do</url-pattern>
+    <url-pattern>/workbench/tran/deleteList.do</url-pattern>
+  </servlet-mapping>
+
+  <!--客户控制器-->
+  <servlet>
+    <servlet-name>CustomerController</servlet-name>
+    <servlet-class>com.ahau.pms.workbench.web.controller.CustomerController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>CustomerController</servlet-name>
+    <url-pattern>/workbench/customer/pageList.do</url-pattern>
+    <url-pattern>/workbench/customer/detail.do</url-pattern>
+    <url-pattern>/workbench/customer/getUserList.do</url-pattern>
+    <url-pattern>/workbench/customer/save.do</url-pattern>
+    <url-pattern>/workbench/customer/getUserCustomer.do</url-pattern>
+    <url-pattern>/workbench/customer/renewCustomer.do</url-pattern>
+    <url-pattern>/workbench/customer/deleteList.do</url-pattern>
+    <url-pattern>/workbench/customer/getRemarkListById.do</url-pattern>
+    <url-pattern>/workbench/customer/saveRemark.do</url-pattern>
+    <url-pattern>/workbench/customer/updateRemark.do</url-pattern>
+    <url-pattern>/workbench/customer/deleteRemark.do</url-pattern>
+  </servlet-mapping>
+
+  <!--联系人控制器-->
+  <servlet>
+    <servlet-name>ContactsController</servlet-name>
+    <servlet-class>com.ahau.pms.workbench.web.controller.ContactsController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ContactsController</servlet-name>
+    <url-pattern>/workbench/contacts/detail.do</url-pattern>
+    <url-pattern>/workbench/contacts/pageList.do</url-pattern>
+    <url-pattern>/workbench/contacts/getUserAndCustomerList.do</url-pattern>
+    <url-pattern>/workbench/contacts/save.do</url-pattern>
+    <url-pattern>/workbench/contacts/getUserContacts.do</url-pattern>
+    <url-pattern>/workbench/contacts/renew.do</url-pattern>
+    <url-pattern>/workbench/contacts/deleteList.do</url-pattern>
+    <url-pattern>/workbench/contacts/getContactsRemarkListById.do</url-pattern>
+    <url-pattern>/workbench/contacts/deleteRemark.do</url-pattern>
+    <url-pattern>/workbench/contacts/updateRemark.do</url-pattern>
+    <url-pattern>/workbench/contacts/saveRemark.do</url-pattern>
+    <url-pattern>/workbench/contacts/getProjectListByContactsId.do</url-pattern>
+    <url-pattern>/workbench/contacts/getProjectListAndNotByContactsId.do</url-pattern>
+    <url-pattern>/workbench/contacts/bund.do</url-pattern>
+    <url-pattern>/workbench/contacts/unbund.do</url-pattern>
+  </servlet-mapping>
+</web-app>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

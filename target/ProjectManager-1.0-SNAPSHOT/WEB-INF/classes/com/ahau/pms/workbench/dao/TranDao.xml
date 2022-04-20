@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ahau.pms.workbench.dao.TranDao">
+    <select id="edit" resultType="tran">
+        select t.id,t.name,t.money,u.name as owner,t.stage,t.type,t.nextContactTime,t.description,
+        t.expectedDate,t.contactSummary,t.source,
+        con.fullname as contactsId,cus.name as customerId,pro.name as projectId
+        from tbl_tran t
+        join tbl_user u on t.owner = u.id
+        join tbl_contacts con on t.contactsId=con.id
+        join tbl_customer cus on t.customerId=cus.id
+        join tbl_project pro on t.projectId=pro.id
+        where t.id=#{id}
+    </select>
+
+    <insert id="save">
+        insert into tbl_tran(
+        id,
+        owner,
+        money,
+        name,
+        expectedDate,
+        customerId,
+        stage,
+        type,
+        source,
+        projectId,
+        contactsId,
+        createBy,
+        createTime,
+        description,
+        contactSummary,
+        nextContactTime)values(
+        #{id},
+        #{owner},
+        #{money},
+        #{name},
+        #{expectedDate},
+        #{customerId},
+        #{stage},
+        #{type},
+        #{source},
+        #{projectId},
+        #{contactsId},
+        #{createBy},
+        #{createTime},
+        #{description},
+        #{contactSummary},
+        #{nextContactTime})
+    </insert>
+
+    <update id="update">
+        update tbl_tran set
+        owner
+        =#{owner},
+        money=#{money},
+        name=#{name},
+        expectedDate=#{expectedDate},
+        customerId=#{customerId},
+        stage=#{stage},
+        type=#{type},
+        source=#{source},
+        projectId=#{projectId},
+        contactsId=#{contactsId},
+        editBy=#{editBy},
+        editTime=#{editTime},
+        description=#{description},
+        contactSummary=#{contactSummary},
+        nextContactTime=#{nextContactTime}
+        where id=#{id}
+    </update>
+
+    <select id="getTotalByCondition" resultType="int">
+        select count(*) from tbl_tran t
+        join tbl_user u on t.owner = u.id
+        join tbl_contacts con on t.contactsId=con.id
+        join tbl_customer cus on t.customerId=cus.id
+        <where>
+            <if test="stage != null and stage != ''">
+                and t.stage like '%' #{stage} '%'
+            </if>
+            <if test="owner != null and owner != ''">
+                and u.name like '%' #{owner} '%'
+            </if>
+            <if test="transactionname != null and transactionname != ''">
+                and t.name like '%' #{transactionname} '%'
+            </if>
+            <if test="transactionType != null and transactionType != ''">
+                and t.type like '%' #{transactionType} '%'
+            </if>
+            <if test="contactsfullname != null and contactsfullname != ''">
+                and con.fullname like '%' #{contactsfullname} '%'
+            </if>
+            <if test="customername != null and customername != ''">
+                and cus.name like '%' #{customername} '%'
+            </if>
+        </where>
+    </select>
+
+    <select id="getTranListByCondition" resultType="tran">
+        select t.id,t.name,t.type,t.stage,t.source,con.fullname as contactsId,cus.name as customerId,u.name as owner
+        from tbl_tran t
+        join tbl_user u on t.owner = u.id
+        join tbl_contacts con on t.contactsId=con.id
+        join tbl_customer cus on t.customerId=cus.id
+        <where>
+            <if test="stage != null and stage != ''">
+                and t.stage like '%' #{stage} '%'
+            </if>
+            <if test="owner != null and owner != ''">
+                and u.name like '%' #{owner} '%'
+            </if>
+            <if test="transactionname != null and transactionname != ''">
+                and t.name like '%' #{transactionname} '%'
+            </if>
+            <if test="transactionType != null and transactionType != ''">
+                and t.type like '%' #{transactionType} '%'
+            </if>
+            <if test="contactsfullname != null and contactsfullname != ''">
+                and con.fullname like '%' #{contactsfullname} '%'
+            </if>
+            <if test="customername != null and customername != ''">
+                and cus.name like '%' #{customername} '%'
+            </if>
+        </where>
+        order by t.createTime desc
+        limit #{skipCount},#{pageSize}
+    </select>
+
+    <select id="detail" resultType="tran">
+        select t.id,t.name,t.money,u.name as owner,t.createTime,t.stage,t.type,t.nextContactTime,t.description,
+        t.editBy,t.editTime,t.createBy,t.expectedDate,t.contactSummary,t.source,
+        con.fullname as contactsId,cus.name as customerId,pro.name as projectId
+        from tbl_tran t
+        join tbl_user u on t.owner = u.id
+        join tbl_contacts con on t.contactsId=con.id
+        join tbl_customer cus on t.customerId=cus.id
+        join tbl_project pro on t.projectId=pro.id
+        where t.id=#{id}
+    </select>
+
+    <delete id="deleteList">
+        delete from tbl_tran
+        where id in
+        <foreach collection="array" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

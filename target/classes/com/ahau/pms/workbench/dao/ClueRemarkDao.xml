@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ahau.pms.workbench.dao.ClueRemarkDao">
+<select id="getCountByCids" resultType="int">
+    select count(*) from tbl_clue_remark
+    where clueId in
+    <foreach collection="array" item="cid" open="(" close=")" separator=",">
+        #{cid}
+    </foreach>
+</select>
+
+    <delete id="deleteByCids">
+        delete from tbl_clue_remark
+        where clueId in
+        <foreach collection="array" item="cid" open="(" close=")" separator=",">
+            #{cid}
+        </foreach>
+    </delete>
+
+    <select id="getClueRemarkListById" resultType="clueRemark">
+        select * from tbl_clue_remark where clueId = #{clueId}
+    </select>
+
+    <insert id="saveRemark">
+        insert into tbl_clue_remark(
+        id,
+        noteContent,
+        createTime,
+        createBy,
+        editFlag,
+        clueId
+        ) values (
+        #{id},
+        #{noteContent},
+        #{createTime},
+        #{createBy},
+        #{editFlag},
+        #{clueId}
+        )
+    </insert>
+
+    <delete id="deleteRemark">
+        delete from tbl_clue_remark where id=#{id}
+    </delete>
+    <!--在线索转换的时候删除备注的方法-->
+    <delete id="delete">
+        delete from tbl_clue_remark where id=#{id}
+    </delete>
+
+    <update id="updateRemark">
+        update tbl_clue_remark
+        set noteContent=#{noteContent},editBy=#{editBy},editTime=#{editTime},editFlag=#{editFlag}
+        where id=#{id}
+    </update>
+
+    <select id="getListByClueId" resultType="ClueRemark">
+        select  * from tbl_clue_remark where clueId=#{clueId}
+    </select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

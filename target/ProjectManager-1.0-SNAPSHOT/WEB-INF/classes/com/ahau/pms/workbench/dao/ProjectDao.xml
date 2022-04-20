@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ahau.pms.workbench.dao.ProjectDao">
+
+    <insert id="save">
+        insert into tbl_project(id,owner,name,startDate,endDate,cost,description,createTime,createBy)
+        values(#{id},#{owner},#{name},#{startDate},#{endDate},#{cost},#{description},#{createTime},#{createBy})
+    </insert>
+
+    <select id="getTotalByCondition" resultType="int">
+        select count(*) from tbl_project p join tbl_user u on p.owner = u.id
+        <where>
+            <if test="name != null and name != ''">
+                and p.name like '%' #{name} '%'
+            </if>
+            <if test="owner != null and owner != ''">
+                and u.name like '%' #{owner} '%'
+            </if>
+            <if test="startDate != null and startDate != ''">
+                and p.startDate &gt; #{startDate}
+            </if>
+            <if test="endDate != null and endDate != ''">
+                and p.endDate &lt; #{endDate}
+            </if>
+        </where>
+    </select>
+
+    <select id="getProjectListByCondition" resultType="project">
+        select p.id,p.name,u.name as owner,p.startDate,p.endDate
+        from tbl_project p
+        join tbl_user u on
+        p.owner = u.id
+        <where>
+            <if test="name != null and name != ''">
+                and p.name like '%' #{name} '%'
+            </if>
+            <if test="owner != null and owner != ''">
+                and u.name like '%' #{owner} '%'
+            </if>
+            <if test="startDate != null and startDate != ''">
+                and p.startDate &gt; #{startDate}
+            </if>
+            <if test="endDate != null and endDate != ''">
+                and p.endDate &lt; #{endDate}
+            </if>
+        </where>
+        order by p.createTime desc
+        limit #{skipCount},#{pageSize}
+    </select>
+
+    <select id="getById" resultType="project">
+        select * from tbl_project where id=#{id}
+    </select>
+
+    <update id="update">
+        update tbl_project set id=#{id},owner=#{owner},name=#{name},startDate=#{startDate},endDate=#{endDate},cost=#{cost},description=#{description},editTime=#{editTime},editBy=#{editBy} where id=#{id}
+    </update>
+
+    <delete id="delete">
+        delete from tbl_project
+        where id in
+        <foreach collection="array" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="detail" resultType="project">
+        select
+        p.id,
+        u.name as owner,
+        p.name,
+        p.startDate,
+        p.endDate,
+        p.cost,
+        p.description,
+        p.createTime,
+        p.createBy,
+        p.editTime,
+        p.editBy
+        from tbl_project p join tbl_user u on p.owner=u.id
+        where p.id=#{id}
+    </select>
+
+    <select id="getProjectListByContactsId" resultType="project">
+        select
+        r.id as id,
+        u.name as owner,
+        p.name,
+        p.startDate,
+        p.endDate
+        from tbl_project p
+        join tbl_user u on p.owner = u.id
+        join tbl_contacts_project_relation r on p.id = r.projectId
+        where r.contactsId=#{contactsId}
+    </select>
+
+    <select id="getProjectListByClueId" resultType="project">
+        select
+        r.id as id,
+        u.name as owner,
+        p.name,
+        p.startDate,
+        p.endDate
+        from tbl_project p
+        join tbl_user u
+        on p.owner = u.id
+        join tbl_clue_project_relation r
+        on p.id = r.projectId
+        where r.clueId=#{clueId}
+    </select>
+
+    <select id="getProjectListAndNotByClueId" resultType="project">
+        select
+        p.id,
+        p.name,
+        p.startDate,
+        p.endDate,
+        u.name as owner
+        from tbl_project p
+        join tbl_user u
+        on p.owner=u.id
+        where p.name like '%' #{pname} '%' and p.id not in
+        (select projectId from tbl_clue_project_relation where clueId=#{clueId})
+    </select>
+
+    <select id="getProjectListAndNotByContactsId" resultType="project">
+        select
+        p.id,
+        p.name,
+        p.startDate,
+        p.endDate,
+        u.name as owner
+        from tbl_project p
+        join tbl_user u
+        on p.owner=u.id
+        where p.name like '%' #{pname} '%' and p.id not in
+        (select projectId from tbl_contacts_project_relation where contactsId=#{contactsId})
+    </select>
+
+    <select id="getProjectListByName" resultType="project">
+        select
+        p.id,
+        p.name,
+        p.startDate,
+        p.endDate,
+        u.name as owner
+        from tbl_project p
+        join tbl_user u
+        on p.owner=u.id
+        where p.name like '%' #{pname} '%'
+    </select>
+
+    <select id="getProjectList" resultType="project">
+        select * from tbl_project
+    </select>
+</mapper>

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ahau.pms.workbench.dao.ContactsDao">
+    <insert id="save">
+        insert into tbl_contacts (
+        id,
+        owner,
+        source,
+        customerId,
+        fullname,
+        appellation,
+        email,
+        mphone,
+        job,
+        birth,
+        createBy,
+        createTime,
+        description,
+        contactSummary,
+        nextContactTime,
+        address) values (
+        #{id},
+        #{owner},
+        #{source},
+        #{customerId},
+        #{fullname},
+        #{appellation},
+        #{email},
+        #{mphone},
+        #{job},
+        #{birth},
+        #{createBy},
+        #{createTime},
+        #{description},
+        #{contactSummary},
+        #{nextContactTime},
+        #{address})
+    </insert>
+
+    <select id="detail" resultType="contacts">
+        select
+            c.id,c.fullname,c.appellation,u.name as owner,cus.name as customerId,c.job,c.email,
+            c.birth,c.mphone,c.source,c.createBy,c.createTime,c.editBy,c.editTime,
+            c.description,c.contactSummary,c.nextContactTime,c.address
+        from tbl_contacts c
+        join tbl_user u on c.owner = u.id
+        join tbl_customer cus on c.customerId=cus.id
+        where c.id=#{id}
+    </select>
+
+    <select id="getTotalByCondition" resultType="int">
+        SELECT
+        count(*)
+        FROM
+        tbl_contacts c
+        JOIN tbl_user u ON c.owner=u.id
+        join (select id from tbl_customer where name like '%' #{customerName} '%') cus on c.customerId=cus.id
+        <where>
+            <if test="fullname != null and fullname != ''">
+                and c.fullname like '%' #{fullname} '%'
+            </if>
+            <if test="owner != null and owner != ''">
+                and u.name like '%' #{owner} '%'
+            </if>
+            <if test="birth != null and birth != ''">
+                and c.birth like '%' #{birth} '%'
+            </if>
+            <if test="source != null and source != ''">
+                and c.source like '%' #{source} '%'
+            </if>
+        </where>
+    </select>
+
+    <select id="getClueListByCondition" resultType="contacts">
+        select c.id,c.fullname,c.source,u.name as owner,c.birth,cust.name as customerId
+        from tbl_contacts c
+        join tbl_user u on c.owner = u.id
+        join tbl_customer cust on c.customerId = cust.id
+        <where>
+            <if test="name != null and name != ''">
+                and c.fullname like '%' #{name} '%'
+            </if>
+            <if test="owner != null and owner != ''">
+                and u.name like '%' #{owmer} '%'
+            </if>
+            <if test="source != null and source != ''">
+                and c.source like '%' #{source} '%'
+            </if>
+            <if test="birth != null and birth != ''">
+                and c.birth like '%' #{birth} '%'
+            </if>
+        </where>
+        order by c.createTime desc
+        limit #{skipCount},#{pageSize}
+    </select>
+
+    <select id="getContactsById" resultType="contacts">
+        select * from tbl_contacts where id=#{id}
+    </select>
+
+    <update id="renewContacts">
+        update tbl_contacts set
+        owner=#{owner},
+        source=#{source},
+        customerId=#{customerId},
+        fullname=#{fullname},
+        appellation=#{appellation},
+        email=#{email},
+        mphone=#{mphone},
+        job=#{job},
+        birth=#{birth},
+        editBy=#{editBy},
+        editTime=#{editTime},
+        description=#{description},
+        contactSummary=#{contactSummary},
+        nextContactTime=#{nextContactTime},
+        address=#{address}
+        where id=#{id}
+    </update>
+
+    <delete id="deleteList">
+        delete from tbl_contacts
+        where id in
+        <foreach collection="array" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="getContactsList" resultType="contacts">
+        select * from tbl_contacts
+    </select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

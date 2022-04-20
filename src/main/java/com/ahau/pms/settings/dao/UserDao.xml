@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ahau.pms.settings.dao.UserDao">
+
+    <select id="login" resultType="user">
+        select * from tbl_user where loginAct=#{loginAct} and loginPwd=#{loginPwd}
+    </select>
+
+    <update id="updatePassword">
+        UPDATE tbl_user set loginPwd=#{arg0} where id=#{arg1}
+    </update>
+
+    <select id="getUserList" resultType="user">
+        select  * from tbl_user
+    </select>
+
+    <insert id="register">
+        insert into tbl_user(id,loginAct,name,loginPwd,email,expireTime,lockState,deptno,allowIps,createTime,createBy)
+        values (#{id},#{loginAct},#{name},#{loginPwd},#{email},#{expireTime},#{lockState},#{deptno},#{allowIps},#{createTime},#{createBy})
+    </insert>
+
+    <delete id="deleteList">
+        delete from tbl_user
+        where id in
+        <foreach collection="array" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="getUser" resultType="user">
+        select id,loginAct,name,loginPwd,email,expireTime,lockState,deptno,allowIps,createTime,createBy,editTime,editBy
+ from tbl_user where id=#{id}
+    </select>
+
+    <update id="update">
+        UPDATE tbl_user set loginAct=#{loginAct},name=#{name},loginPwd=#{loginPwd},email=#{email},expireTime=#{expireTime},
+        lockState=#{lockState},deptno=#{deptno},allowIps=#{allowIps},editTime=#{editTime},editBy=#{editBy}
+        where id=#{id}
+    </update>
+</mapper>
+
